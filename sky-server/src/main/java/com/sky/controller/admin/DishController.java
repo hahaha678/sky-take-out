@@ -6,6 +6,7 @@ import com.sky.entity.Dish;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -45,8 +46,21 @@ public class DishController {
     @GetMapping("/{id}")
     public Result getById(@PathVariable Long id) {
         log.info("根据id查询菜品:{}", id);
-        Dish dish = dishService.getById(id);
-        return Result.success(dish);
+        DishVO dishVO = dishService.getById(id);
+        return Result.success(dishVO);
     }
 
+    @GetMapping("/list")
+    public Result getByCategoryId(Long categoryId) {
+        log.info("根据分类id查询菜品:{}", categoryId);
+        List<DishVO> dishList = dishService.getByCategoryId(categoryId);
+        return Result.success(dishList);
+    }
+
+    @PutMapping
+    public Result update(@RequestBody DishDTO dishDTO){
+        log.info("修改菜品:{}", dishDTO);
+        dishService.update(dishDTO);
+        return Result.success();
+    }
 }

@@ -29,5 +29,10 @@ public interface DishMapper {
 
     void deleteByIds(List<Long> idList);
 
-    Dish selectById(Long id);
+    DishVO selectById(Long id);
+
+    List<DishVO> selectByCategoryId(Long categoryId);
+
+    @AutoFill(value = OperationType.UPDATE)
+    void update(Dish dish);
 }

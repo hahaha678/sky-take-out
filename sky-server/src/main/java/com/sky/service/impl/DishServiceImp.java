@@ -15,12 +15,12 @@ import com.sky.mapper.SetmealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
 import com.sky.vo.DishVO;
-import io.swagger.models.auth.In;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,7 +68,7 @@ public class DishServiceImp implements DishService {
                 .map(Long::parseLong)
                 .collect(Collectors.toList());
         idList.forEach(id->{
-            Dish dish = dishMapper.selectById(id);
+            DishVO dish = dishMapper.selectById(id);
             if(dish.getStatus() == StatusConstant.ENABLE){
                 throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
             } else if ( setmealDishMapper.countByDishId(id) > 0) {
@@ -81,7 +81,32 @@ public class DishServiceImp implements DishService {
     }
 
     @Override
-    public Dish getById(Long id) {
-        return dishMapper.selectById(id);
+    public DishVO getById(Long id) {
+        DishVO dishVO = dishMapper.selectById(id);
+        dishVO.setFlavors(dishFlavorMapper.selectByDishId(id));
+        return dishVO;
+    }
+
+    @Override
+    public List<DishVO> getByCategoryId(Long categoryId) {
+        return dishMapper.selectByCategoryId(categoryId);
+    }
+
+    @Override
+    @Transactional
+    public void update(DishDTO dishDTO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+        dishMapper.update(dish);
+        List<DishFlavor> dishFlavor = dishDTO.getFlavors();
+        if(dishFlavor != null && dishFlavor.size() > 0){
+            ArrayList<Long> dishIds = new ArrayList<Long>();
+            dishIds.add(dish.getId());
+            dishFlavorMapper.deleteByDishIds(dishIds);
+            for (DishFlavor flavor : dishFlavor) {
+                flavor.setDishId(dish.getId());
+            }
+            dishFlavorMapper.insert(dishFlavor);
+        }
     }
 }
