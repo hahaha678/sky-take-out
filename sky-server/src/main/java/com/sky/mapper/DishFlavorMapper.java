@@ -16,4 +16,5 @@ public interface DishFlavorMapper {
 
     List<DishFlavor> selectByDishId(Long dishId);
 
+    List<DishFlavor> getByDishId(Long id);
 }
