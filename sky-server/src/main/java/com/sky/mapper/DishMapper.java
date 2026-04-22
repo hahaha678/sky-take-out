@@ -40,4 +40,6 @@ public interface DishMapper {
     void updateStatus(Dish dish);
 
     List<Dish> list(Dish dish);
+
+    Dish getById(Long dishId);
 }

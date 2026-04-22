@@ -2,7 +2,6 @@ package com.sky.mapper;
 
 import com.github.pagehelper.Page;
 import com.sky.annotation.AutoFill;
-import com.sky.dto.SetmealDTO;
 import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
@@ -35,7 +34,7 @@ public interface SetmealMapper {
 
     void deleteByIds(List<Integer> ids);
 
-    SetmealVO getById(Long id);
+    Setmeal getById(Long id);
 
     @AutoFill(OperationType.UPDATE)
     void update(Setmeal setmeal);
@@ -56,4 +55,5 @@ public interface SetmealMapper {
             "from setmeal_dish sd left join dish d on sd.dish_id = d.id " +
             "where sd.setmeal_id = #{setmealId}")
     List<DishItemVO> getDishItemBySetmealId(Long setmealId);
+
 }

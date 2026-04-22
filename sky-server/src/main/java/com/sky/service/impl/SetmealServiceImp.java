@@ -66,7 +66,9 @@ public class SetmealServiceImp implements SetmealService {
 
     @Override
     public SetmealVO getById(Long id) {
-        SetmealVO setmealVO = setmealMapper.getById(id);
+        SetmealVO setmealVO = new SetmealVO();
+        Setmeal setmeal = setmealMapper.getById(id);
+        BeanUtils.copyProperties(setmeal, setmealVO);
         setmealVO.setSetmealDishes(setmealDishMapper.selectBySetmealId(setmealVO.getId()));
         return setmealVO;
     }

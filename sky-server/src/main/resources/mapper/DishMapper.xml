@@ -80,4 +80,7 @@
             </if>
         </where>
     </select>
+    <select id="getById" resultType="com.sky.entity.Dish">
+        select * from dish where id = #{id}
+    </select>
 </mapper>
