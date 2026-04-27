@@ -291,4 +291,16 @@ public class OrderServiceImp implements OrderService {
     public void complete(Long id) {
         orderMapper.setStatus(id, Orders.COMPLETED);
     }
+
+    @Override
+    public void reminder(Long id) {
+        //websocket推送
+        Map map = new HashMap();
+        map.put("type", 2);
+        map.put("orderId", id);
+        map.put("content", "订单号：" + orderMapper.getById(id).getNumber());
+
+        String json = JSON.toJSONString(map);
+        webSocketServer.sendToAllClient(json);
+    }
 }
