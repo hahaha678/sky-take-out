@@ -35,10 +35,12 @@ public interface OrderMapper {
 
     void setStatus(Long id, Integer status);
 
-    Integer countStatus(Integer confirmed);
+    Integer countStatus(Integer status);
 
     @Select("select * from orders where status = #{status} and order_time < #{time}")
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime time);
 
     Double sumByMap(Map map);
+
+    Integer ordersStatistics(Map map);
 }

@@ -73,10 +73,29 @@
         select * from orders where id = #{id}
     </select>
     <select id="countStatus" resultType="java.lang.Integer">
-        select count(id) from orders where status = #{status}
+        select count(id) from orders
+        <where>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
     </select>
     <select id="sumByMap" resultType="java.lang.Double">
         select sum(amount) from orders
+        <where>
+            <if test="begin != null">
+                and order_time &gt; #{begin}
+            </if>
+            <if test="end != null">
+                and order_time &lt; #{end}
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="ordersStatistics" resultType="java.lang.Integer">
+        select count(id) from orders
         <where>
             <if test="begin != null">
                 and order_time &gt; #{begin}
