@@ -1,13 +1,11 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
-import com.sky.vo.OrderReportVO;
-import com.sky.vo.OrderStatisticsVO;
-import com.sky.vo.TurnoverReportVO;
-import com.sky.vo.UserReportVO;
+import com.sky.vo.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportServiceImp implements ReportService {
@@ -128,4 +127,16 @@ public class ReportServiceImp implements ReportService {
                 .validOrderCountList(StringUtils.join(validOrderCountList, ","))
                 .build();
     }
+
+    @Override
+    public SalesTop10ReportVO top10(LocalDate begin, LocalDate end) {
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        List<GoodsSalesDTO> goodsSalesList = orderMapper.getSalesTop10(begin, end);
+        return SalesTop10ReportVO.builder()
+                .nameList(goodsSalesList.stream().map(GoodsSalesDTO::getName).collect(Collectors.joining(",")))
+                .numberList(goodsSalesList.stream().map(GoodsSalesDTO::getNumber).map(Object::toString).collect(Collectors.joining(",")))
+                .build();
+    }
+
 }

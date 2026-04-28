@@ -51,4 +51,13 @@ public class ReportController {
         OrderReportVO orderReportVO = reportService.ordersStatistics(begin, end);
         return Result.success(orderReportVO);
     }
+
+    @GetMapping("/top10")
+    public Result top10(
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate begin,
+            @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate end
+    ) {
+        log.info("销量排名top10：{}到{}", begin, end);
+        return Result.success(reportService.top10(begin, end));
+    }
 }
